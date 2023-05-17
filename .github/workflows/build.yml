@@ -1,0 +1,75 @@
+name: tardigrade terraform network mirror builder
+on:
+  # Run on demand
+  workflow_dispatch:
+
+  # Run pull requests against the main branch
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Dockerfile.*'
+      - '.github/workflows/build.yml'
+
+  # Run when a release is created
+  release:
+    types: [released]
+
+permissions:
+  id-token: write
+
+concurrency:
+  group: ${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  BuildMirror:
+    name: build-terraform-network-mirror
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [linux, windows]
+        arch: [amd64]
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+      MIRROR_ENDPOINT: https://hashicorp-mirror.cloudarmor.io
+      MIRROR_BUCKET: p3-hashicorp-mirror
+      PROVIDERS_PREFIX: registry.terraform.io
+      REPO_PREFIX: repo
+      MIRROR_PATH: .mirror
+    steps:
+      - name: Clone this git repository
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+
+      - name: Install aws-cli
+        uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c
+
+      - name: Retrieve current providers mirror
+        run: |
+          mkdir -p ./${{ env.MIRROR_PATH }}
+          aws s3 sync --no-sign-request --exact-timestamps --endpoint-url ${{ env.MIRROR_ENDPOINT }} s3://${{ env.MIRROR_BUCKET }}/${{ env.PROVIDERS_PREFIX }} ./${{ env.MIRROR_PATH }}/${{ env.PROVIDERS_PREFIX }}
+
+      - name: Update Terraform registry with ${{ matrix.os }}_${{ matrix.arch }} providers
+        run: |
+          terraform providers mirror \
+            -platform=${{ matrix.os }}_${{ matrix.arch }} \
+            ${{ env.MIRROR_PATH }}/
+
+      - name: Update repo with ${{ matrix.os }}_${{ matrix.arch }} tools
+        run: |
+          make download-all OS=${{ matrix.os }} ARCH=${{ matrix.arch }}
+
+      - name: configure aws credentials
+        if: github.event_name != 'pull_request'
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_ROLE_NAME }}
+          aws-region: us-east-1
+
+      - name:  Validate credential
+        if: github.event_name != 'pull_request'
+        run: aws sts get-caller-identity
+
+      - name: Push mirror to s3 bucket
+        if: github.event_name != 'pull_request'
+        run: |
+          aws s3 sync ./${{ env.MIRROR_PATH }}/${{ env.PROVIDERS_PREFIX }}/ s3://${{ env.MIRROR_BUCKET }}/${{ env.PROVIDERS_PREFIX }}/
