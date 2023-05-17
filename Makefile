@@ -32,6 +32,8 @@ terraform/download: | $(TERRAFORM_VERSION_REPO_PATH) guard/program/jq
 terragrunt/download: | $(TERRAGRUNT_VERSION_REPO_PATH) guard/program/jq
 	@ $(SELF) download/gh-release/$(@D) FILENAME="$(TERRAGRUNT_VERSION_REPO_PATH)/$(@D)" OWNER=gruntwork-io REPO=$(@D) VERSION=tags/$(TERRAGRUNT_VERSION) QUERY='.name | contains("$(OS)_$(ARCH)")'
 
+download-all: packer/download terraform/download terragrunt/download
+
 release/%: PRIOR_VERSION = $(shell git describe --abbrev=0 --tags 2> /dev/null)
 release/%: RELEASE_VERSION = $(AMAZONLINUX_VERSION)
 
