@@ -22,8 +22,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  BuildMirror:
-    name: build-terraform-network-mirror
+  MirrorRepoTools:
+    name: build-repo-tools
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -43,20 +43,38 @@ jobs:
       - name: Install aws-cli
         uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c
 
+      - name: Update repo with ${{ matrix.os }}_${{ matrix.arch }} tools
+        run: |
+          make download-all OS=${{ matrix.os }} ARCH=${{ matrix.arch }}
+
+  MirrorTerraformProviders:
+    name: build-terraform-network-mirror
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+      MIRROR_ENDPOINT: https://hashicorp-mirror.cloudarmor.io
+      MIRROR_BUCKET: p3-hashicorp-mirror
+      PROVIDERS_PREFIX: registry.terraform.io
+      REPO_PREFIX: repo
+      MIRROR_PATH: .mirror
+    steps:
+      - name: Clone this git repository
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+
+      - name: Install aws-cli
+        uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c
+
       - name: Retrieve current providers mirror
+        if: github.event_name != 'pull_request'
         run: |
           mkdir -p ./${{ env.MIRROR_PATH }}
           aws s3 sync --no-sign-request --exact-timestamps --endpoint-url ${{ env.MIRROR_ENDPOINT }} s3://${{ env.MIRROR_BUCKET }}/${{ env.PROVIDERS_PREFIX }} ./${{ env.MIRROR_PATH }}/${{ env.PROVIDERS_PREFIX }}
 
-      - name: Update Terraform registry with ${{ matrix.os }}_${{ matrix.arch }} providers
+      - name: Create Terraform provider registry for linux_amd64 platform
         run: |
           terraform providers mirror \
-            -platform=${{ matrix.os }}_${{ matrix.arch }} \
+            -platform=linux_amd64 \
             ${{ env.MIRROR_PATH }}/
-
-      - name: Update repo with ${{ matrix.os }}_${{ matrix.arch }} tools
-        run: |
-          make download-all OS=${{ matrix.os }} ARCH=${{ matrix.arch }}
 
       - name: configure aws credentials
         if: github.event_name != 'pull_request'
