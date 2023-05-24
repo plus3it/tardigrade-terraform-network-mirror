@@ -37,7 +37,7 @@ terragrunt/download: | $(TERRAGRUNT_VERSION_REPO_PATH) guard/program/jq
 download-all: packer/download terraform/download terragrunt/download
 
 release/%: PRIOR_VERSION = $(shell git describe --abbrev=0 --tags 2> /dev/null)
-release/%: RELEASE_VERSION = $(AMAZONLINUX_VERSION)
+release/%: RELEASE_VERSION = $(TERRAFORM_VERSION)
 
 release/test:
 	test "$(PRIOR_VERSION)" != "$(RELEASE_VERSION)"
