@@ -1,7 +1,8 @@
 pull_request_rules:
-  - name: approve dependabot pull requests
+  - name: approve dependabot pull requests with build workflow
     conditions:
-      - author=dependabot[bot]
+      - author~=dependabot\[bot\]
+      - check-success=build-mirror
     actions:
       review:
         type: APPROVE
