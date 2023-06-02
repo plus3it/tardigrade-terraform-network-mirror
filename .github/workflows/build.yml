@@ -78,6 +78,18 @@ jobs:
             -platform=darwin_amd64 \
             ${{ env.MIRROR_PATH }}/
 
+      - name: Verify local providers mirror
+        run: |
+          PWD=$(pwd)
+          cat << EOF > "$HOME/.terraformrc"
+          provider_installation {
+            filesystem_mirror {
+              path    = "$PWD/.mirror"
+            }
+          }
+          EOF
+          terraform init
+
       - name: Push mirror to s3 bucket
         if: github.event_name != 'pull_request'
         run: |
