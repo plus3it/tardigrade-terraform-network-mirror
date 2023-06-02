@@ -12,6 +12,7 @@ The project tracks the versions of tools and providers used, and automatically u
 |------|---------|
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | 4.29.0 |
 | <a name="requirement_external"></a> [external](#requirement\_external) | 2.2.3 |
+| <a name="requirement_local"></a> [local](#requirement\_local) | 2.2.3 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | 3.1.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | 3.4.3 |
 
