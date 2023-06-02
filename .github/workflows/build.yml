@@ -71,6 +71,12 @@ jobs:
           terraform providers mirror \
             -platform=linux_amd64 \
             ${{ env.MIRROR_PATH }}/
+          terraform providers mirror \
+            -platform=windows_amd64 \
+            ${{ env.MIRROR_PATH }}/
+          terraform providers mirror \
+            -platform=darwin_amd64 \
+            ${{ env.MIRROR_PATH }}/
 
       - name: Push mirror to s3 bucket
         if: github.event_name != 'pull_request'
