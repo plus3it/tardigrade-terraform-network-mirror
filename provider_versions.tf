@@ -8,6 +8,10 @@ terraform {
       source  = "registry.terraform.io/hashicorp/external"
       version = "2.2.3"
     }
+    local = {
+      source  = "registry.terraform.io/hashicorp/local"
+      version = "2.2.3"
+    }
     null = {
       source  = "registry.terraform.io/hashicorp/null"
       version = "3.1.0"
