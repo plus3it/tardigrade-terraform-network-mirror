@@ -94,3 +94,8 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           aws s3 sync ./${{ env.MIRROR_PATH }}/${{ env.PROVIDERS_PREFIX }}/ s3://${{ env.MIRROR_BUCKET }}/${{ env.PROVIDERS_PREFIX }}/
+
+      - name: Create cloudfront cache invalidation
+        if: github.event_name != 'pull_request'
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.HASHICORP_MIRRIR_DISTRIBUTION }} --paths "/registry.terraform.io/*"
