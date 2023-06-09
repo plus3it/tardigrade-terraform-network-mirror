@@ -70,11 +70,7 @@ jobs:
         run: |
           terraform providers mirror \
             -platform=linux_amd64 \
-            ${{ env.MIRROR_PATH }}/
-          terraform providers mirror \
             -platform=windows_amd64 \
-            ${{ env.MIRROR_PATH }}/
-          terraform providers mirror \
             -platform=darwin_amd64 \
             ${{ env.MIRROR_PATH }}/
 
