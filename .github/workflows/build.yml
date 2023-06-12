@@ -1,0 +1,95 @@
+name: tardigrade terraform network mirror builder
+on:
+  # Run on demand
+  workflow_dispatch:
+
+  # Run pull requests against the main branch
+  pull_request:
+    branches: [main]
+    paths:
+      - 'Dockerfile.tools'
+      - '.github/workflows/dependabot_hack.yml'
+      - 'providers/versions.tf'
+
+  # Run when a release is created
+  release:
+    types: [released]
+
+permissions:
+  id-token: write
+
+concurrency:
+  group: ${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  BuildMirror:
+    name: build-mirror
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+      MIRROR_ENDPOINT: https://hashicorp-mirror.cloudarmor.io
+      MIRROR_BUCKET: p3-hashicorp-mirror
+      REPO_PATH: .mirror/repo
+    steps:
+      - name: Clone this git repository
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+
+      - name: Install aws-cli
+        uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c
+
+      - name: Download repo tools
+        run: |
+          make download-all
+
+      - name: configure aws credentials
+        if: github.event_name != 'pull_request'
+        uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_ROLE_NAME }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
+      - name:  Validate credential
+        if: github.event_name != 'pull_request'
+        run: aws sts get-caller-identity
+
+      - name: Push repo tools to s3 bucket
+        if: github.event_name != 'pull_request'
+        run: |
+          aws s3 cp ./${{ env.REPO_PATH }}/ s3://${{ env.MIRROR_BUCKET }}/repo/ --recursive
+
+      - name: Retrieve current providers mirror
+        if: github.event_name != 'pull_request'
+        run: |
+          mkdir -p ./${{ env.REPO_PATH }}/providers
+          aws s3 sync --no-sign-request --exact-timestamps --endpoint-url ${{ env.MIRROR_ENDPOINT }} s3://${{ env.MIRROR_BUCKET }}/repo/providers/ ./${{ env.REPO_PATH }}/providers/
+
+      - name: Create Terraform provider registry
+        run: |
+          terraform -chdir=./providers/ providers mirror \
+            -platform=linux_amd64 \
+            -platform=windows_amd64 \
+            -platform=darwin_amd64 \
+            ../${{ env.REPO_PATH }}/providers/
+
+      - name: Verify local providers mirror
+        run: |
+          PWD=$(pwd)
+          cat << EOF > "$HOME/.terraformrc"
+          provider_installation {
+            filesystem_mirror {
+              path    = "$PWD/${{ env.REPO_PATH }}/providers/"
+            }
+          }
+          EOF
+          terraform -chdir=./providers/ init
+
+      - name: Push mirror to s3 bucket
+        if: github.event_name != 'pull_request'
+        run: |
+          aws s3 sync ./${{ env.REPO_PATH }}/providers/ s3://${{ env.MIRROR_BUCKET }}/repo/providers/
+
+      - name: Create cloudfront cache invalidation
+        if: github.event_name != 'pull_request'
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.HASHICORP_MIRRIR_DISTRIBUTION }} --paths "/registry.terraform.io/*"

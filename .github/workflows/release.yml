@@ -8,12 +8,31 @@ on:
   push:
     branches:
       - main
-      - master
     paths:
-      - .bumpversion.cfg
+      - Dockerfile.tools
 
 jobs:
   release:
-    uses: plus3it/actions-workflows/.github/workflows/release.yml@5e9a88632006562f08c78be0b1ac4491f59720de
-    secrets:
-      release-token: ${{ secrets.GH_RELEASES_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        with:
+          fetch-depth: 0
+      - run: git fetch --tags --force origin # WA: https://github.com/actions/checkout/issues/882
+      - name: Test release condition
+        id: release
+        run: |
+          RELEASE=false
+          if make release/test 2> /dev/null; then RELEASE=true; fi
+          echo "condition=${RELEASE}" >> "$GITHUB_OUTPUT"
+          echo "version=$(make release/version)" >> "$GITHUB_OUTPUT"
+      - name: Create release
+        if: steps.release.outputs.condition == 'true'
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844
+        with:
+          name: ${{ steps.release.outputs.version }}
+          tag_name:  ${{ steps.release.outputs.version }}
+          generate_release_notes: true
+          target_commitish: ${{ env.GITHUB_REF }}
+          token: ${{ secrets.GH_RELEASES_TOKEN }}
