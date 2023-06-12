@@ -9,7 +9,7 @@ on:
     paths:
       - 'Dockerfile.tools'
       - '.github/workflows/dependabot_hack.yml'
-      - 'provider_versions.tf'
+      - 'providers/versions.tf'
 
   # Run when a release is created
   release:
@@ -66,11 +66,11 @@ jobs:
 
       - name: Create Terraform provider registry
         run: |
-          terraform providers mirror \
+          terraform -chdir=./providers/ providers mirror \
             -platform=linux_amd64 \
             -platform=windows_amd64 \
             -platform=darwin_amd64 \
-            ${{ env.REPO_PATH }}/providers/
+            ../${{ env.REPO_PATH }}/providers/
 
       - name: Verify local providers mirror
         run: |
@@ -82,7 +82,7 @@ jobs:
             }
           }
           EOF
-          terraform init
+          terraform -chdir=./providers/ init
 
       - name: Push mirror to s3 bucket
         if: github.event_name != 'pull_request'

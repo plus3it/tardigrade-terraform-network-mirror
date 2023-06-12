@@ -4,7 +4,7 @@ Manages a [`cloudarmor.io`][0] site that can be used as a [`Terraform network mi
 and Terraform-associated tools. The site can be used directly or replicated into a disconnected network to serve as a Terrform
 network mirror.
 
-The Terraform providers and current versions are tracked within [`provider_versions.tf`][4]. The available tools and current versions are
+The Terraform providers and current versions are tracked within [`versions.tf`][4]. The available tools and current versions are
 tracked either within [`Dockerfile.tools`][2] or [`dependabot_hack.yml`][3]. An automated process utilizing Dependabot, Mergify, and GitHub Actions
 will update the versions as they become available and append the new files to the mirror.  A limited number of older versions will be maintained
 in the mirror but will be removed after a period of time.  New providers or tools can be added to the project by submitting a PR updating any of
@@ -46,7 +46,7 @@ For example,
 terraform providers mirror -platform=linux_amd64 ./mirror/
 ```
 
-To add additional providers, provider versions, or platforms, simply update `provider_versions.tf` and re-run the above command with the desired
+To add additional providers, provider versions, or platforms, simply update `versions.tf` and re-run the above command with the desired
 platform using the same mirror path.  Using the same mirror path will allow Terraform to properly update the mirror json files to properly track multple provider versions.
 
 
@@ -54,37 +54,8 @@ platform using the same mirror path.  Using the same mirror path will allow Terr
 [1]: https://developer.hashicorp.com/terraform/internals/provider-network-mirror-protocol
 [2]: https://github.com/plus3it/tardigrade-terraform-network-mirror/blob/tf-mirror/Dockerfile.tools
 [3]: https://github.com/plus3it/tardigrade-terraform-network-mirror/blob/tf-mirror/.github/workflows/dependabot_hack.yml
-[4]: https://github.com/plus3it/tardigrade-terraform-network-mirror/blob/tf-mirror/provider_versions.tf
+[4]: https://github.com/plus3it/tardigrade-terraform-network-mirror/blob/tf-mirror/providers/versions.tf
 [5]: https://hashicorp-mirror.cloudarmor.io/providers/
 [6]: https://developer.hashicorp.com/terraform/cli/config/config-file
 [8]: https://developer.hashicorp.com/terraform/cli/config/config-file#provider-installation
 [9]: https://developer.hashicorp.com/terraform/cli/config/config-file#filesystem_mirror
-
-<!-- BEGIN TFDOCS -->
-## Requirements
-
-| Name | Version |
-|------|---------|
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 4.29.0 |
-| <a name="requirement_external"></a> [external](#requirement\_external) | 2.2.3 |
-| <a name="requirement_local"></a> [local](#requirement\_local) | 2.2.3 |
-| <a name="requirement_null"></a> [null](#requirement\_null) | 3.1.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | 3.4.3 |
-
-## Providers
-
-No providers.
-
-## Resources
-
-No resources.
-
-## Inputs
-
-No inputs.
-
-## Outputs
-
-No outputs.
-
-<!-- END TFDOCS -->
