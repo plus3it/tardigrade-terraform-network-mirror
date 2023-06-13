@@ -50,7 +50,7 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_ROLE_NAME }}
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
-      - name:  Validate credential
+      - name: Validate credential
         if: github.event_name != 'pull_request'
         run: aws sts get-caller-identity
 
