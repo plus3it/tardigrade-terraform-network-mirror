@@ -7,6 +7,14 @@ pull_request_rules:
       review:
         type: APPROVE
 
+  - name: approve dependabot pull requests without build workflow
+    conditions:
+      - author~=dependabot\[bot\]
+      - -files~=^(Dockerfile.tools|\.github/workflows/build\.yml|providers/)
+    actions:
+      review:
+        type: APPROVE
+
   - name: merge dependabot pull requests
     conditions:
       - author=dependabot[bot]
