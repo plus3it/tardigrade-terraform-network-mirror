@@ -10,7 +10,7 @@ terraform {
     }
     local = {
       source  = "registry.terraform.io/hashicorp/local"
-      version = "2.2.3"
+      version = "2.4.0"
     }
     null = {
       source  = "registry.terraform.io/hashicorp/null"
