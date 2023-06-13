@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9
 
       - name: Install aws-cli
-        uses: unfor19/install-aws-cli-action@35a9630be0168293ad2afccbe06e8e9f47678d2c
+        uses: unfor19/install-aws-cli-action@3c53dab4dd62b5d9d647f0ce9519285250a3c767
 
       - name: Download repo tools
         run: |
