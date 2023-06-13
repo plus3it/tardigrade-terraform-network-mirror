@@ -14,7 +14,7 @@ updates:
     open-pull-requests-limit: 10
   # Maintain dependencies for Terraform
   - package-ecosystem: terraform
-    directory: "/"
+    directory: "/providers"
     schedule:
       interval: daily
     open-pull-requests-limit: 10
