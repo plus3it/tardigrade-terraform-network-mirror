@@ -10,6 +10,7 @@ on:
       - main
     paths:
       - Dockerfile.tools
+      - 'providers/versions.tf'
 
 jobs:
   release:
