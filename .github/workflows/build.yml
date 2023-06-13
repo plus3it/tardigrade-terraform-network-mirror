@@ -8,6 +8,7 @@ on:
     branches: [main]
     paths:
       - 'Dockerfile.tools'
+      - '.github/workflows/build.yml'
       - '.github/workflows/dependabot_hack.yml'
       - 'providers/versions.tf'
 
