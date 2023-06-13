@@ -29,12 +29,3 @@ terragrunt/download: | $(TERRAGRUNT_VERSION_REPO_PATH) guard/program/jq
 	$(call download_github_release,$(TERRAGRUNT_VERSION_REPO_PATH)/$(TERRAGRUNT_FILENAME),gruntwork-io,$(@D),tags/$(TERRAGRUNT_VERSION),(.name | contains("$(OS)_$(ARCH)")))
 
 download-all: packer/download terraform/download terragrunt/download
-
-release/%: PRIOR_VERSION = $(shell git describe --abbrev=0 --tags 2> /dev/null)
-release/%: RELEASE_VERSION = $(shell git rev-parse --verify HEAD 2> /dev/null)
-
-release/test:
-	test "$(PRIOR_VERSION)" != "$(RELEASE_VERSION)"
-
-release/version:
-	@ echo $(RELEASE_VERSION)
