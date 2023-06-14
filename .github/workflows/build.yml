@@ -93,4 +93,4 @@ jobs:
       - name: Create cloudfront cache invalidation
         if: github.event_name != 'pull_request'
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.HASHICORP_MIRRIR_DISTRIBUTION }} --paths "/registry.terraform.io/*"
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.HASHICORP_MIRRIR_DISTRIBUTION }} --paths "/repo/*"
