@@ -22,7 +22,7 @@ The [`Terraform providers mirror`][5] can be used directly by creating a [`Terra
 ```
 provider_installation {
   network_mirror {
-    url = "https://hashicorp-mirror.cloudarmor.io/providers/"
+    url = "https://hashicorp-mirror.cloudarmor.io/repo/terraform-registry/"
   }
 }
 ```
@@ -55,7 +55,7 @@ platform using the same mirror path.  Using the same mirror path will allow Terr
 [2]: https://github.com/plus3it/tardigrade-terraform-network-mirror/blob/tf-mirror/Dockerfile.tools
 [3]: https://github.com/plus3it/tardigrade-terraform-network-mirror/blob/tf-mirror/.github/workflows/dependabot_hack.yml
 [4]: https://github.com/plus3it/tardigrade-terraform-network-mirror/blob/tf-mirror/providers/versions.tf
-[5]: https://hashicorp-mirror.cloudarmor.io/providers/
+[5]: https://hashicorp-mirror.cloudarmor.io/repo/terraform-registry/
 [6]: https://developer.hashicorp.com/terraform/cli/config/config-file
 [8]: https://developer.hashicorp.com/terraform/cli/config/config-file#provider-installation
 [9]: https://developer.hashicorp.com/terraform/cli/config/config-file#filesystem_mirror
