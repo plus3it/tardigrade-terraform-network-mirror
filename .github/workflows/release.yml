@@ -10,6 +10,7 @@ on:
       - main
     paths:
       - Dockerfile.tools
+      - '.github/workflows/dependabot_hack.yml'
       - 'providers/versions.tf'
 jobs:
   release:
