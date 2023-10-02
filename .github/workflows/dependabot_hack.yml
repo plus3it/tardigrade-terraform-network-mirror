@@ -22,4 +22,4 @@ jobs:
     steps:
       # Keep these sorted alphabetically by <user>/<repo>, separated by an empty line
 
-      - uses: gruntwork-io/terragrunt@v0.51.6
+      - uses: gruntwork-io/terragrunt@v0.51.7
