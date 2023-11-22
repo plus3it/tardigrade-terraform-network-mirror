@@ -6,7 +6,7 @@ terraform {
     }
     external = {
       source  = "registry.terraform.io/hashicorp/external"
-      version = "2.3.1"
+      version = "2.3.2"
     }
     local = {
       source  = "registry.terraform.io/hashicorp/local"
