@@ -3,6 +3,6 @@
 
 # Keep these sorted alphabetically, separated by an empty line
 
-FROM hashicorp/packer:1.10.3 as packer
+FROM hashicorp/packer:1.11.0 as packer
 
 FROM hashicorp/terraform:1.8.4 as terraform
