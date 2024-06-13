@@ -34,7 +34,7 @@ jobs:
       REPO_PATH: .mirror/repo
     steps:
       - name: Clone this git repository
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
       - name: Install aws-cli
         uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367
