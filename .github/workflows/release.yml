@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0
       - run: git fetch --tags --force origin  # WA: https://github.com/actions/checkout/issues/882
       - name: Create release
-        uses: softprops/action-gh-release@fb2d03176f42a1f0dd433ca263f314051d3edd44
+        uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191
         with:
           name: release/${{ github.sha }}
           tag_name: release/${{ github.sha }}
