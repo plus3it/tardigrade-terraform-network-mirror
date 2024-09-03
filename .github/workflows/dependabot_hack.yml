@@ -25,3 +25,11 @@ jobs:
       - uses: gruntwork-io/terragrunt@v0.67.1
 
       - uses: hashicorp/packer-plugin-amazon@v1.3.2
+
+      - uses: hashicorp/packer-plugin-azure@v2.1.8
+
+      - uses: hashicorp/packer-plugin-openstack@v1.1.2
+
+      - uses: hashicorp/packer-plugin-vagrant@v1.1.4
+
+      - uses: hashicorp/packer-plugin-virtualbox@v1.1.1
