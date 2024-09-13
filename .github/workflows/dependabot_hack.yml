@@ -30,6 +30,6 @@ jobs:
 
       - uses: hashicorp/packer-plugin-openstack@v1.1.2
 
-      - uses: hashicorp/packer-plugin-vagrant@v1.1.4
+      - uses: hashicorp/packer-plugin-vagrant@v1.1.5
 
       - uses: hashicorp/packer-plugin-virtualbox@v1.1.1
