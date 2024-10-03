@@ -5,4 +5,4 @@
 
 FROM hashicorp/packer:1.11.2 as packer
 
-FROM hashicorp/terraform:1.9.6 as terraform
+FROM hashicorp/terraform:1.9.7 as terraform
