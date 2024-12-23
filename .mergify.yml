@@ -10,7 +10,7 @@ pull_request_rules:
   - name: approve dependabot pull requests without build workflow
     conditions:
       - author~=dependabot\[bot\]
-      - -files~=^(Dockerfile.tools|\.github/workflows/build\.yml|providers/)
+      - -files~=^(Dockerfile.tools|\.github/workflows/build\.yml|\.github/workflows/dependabot_hack\.yml|providers/)
     actions:
       review:
         type: APPROVE
