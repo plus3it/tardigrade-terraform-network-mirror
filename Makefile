@@ -1,5 +1,3 @@
-include $(shell test -f .tardigrade-ci || curl -sSL -o .tardigrade-ci "https://raw.githubusercontent.com/plus3it/tardigrade-ci/master/bootstrap/Makefile.bootstrap"; echo .tardigrade-ci)
-
 export MIRROR_DOCKERFILE_TOOLS ?= Dockerfile.tools
 export MIRROR_GITHUB_TOOLS ?= $(PWD)/.github/workflows/dependabot_hack.yml
 
@@ -10,6 +8,8 @@ export TERRAFORM_VERSION ?= $(call match_pattern_in_file,$(MIRROR_DOCKERFILE_TOO
 export TERRAFORM_VERSION_REPO_PATH ?= $(REPO_DIR)/terraform/$(TERRAFORM_VERSION)
 export TERRAGRUNT_VERSION ?= v$(call match_pattern_in_file,$(MIRROR_GITHUB_TOOLS),'gruntwork-io/terragrunt','$(SEMVER_PATTERN)')
 export TERRAGRUNT_VERSION_REPO_PATH ?= $(REPO_DIR)/terragrunt/$(TERRAGRUNT_VERSION)
+
+include $(shell test -f .tardigrade-ci || curl -sSL -o .tardigrade-ci "https://raw.githubusercontent.com/plus3it/tardigrade-ci/master/bootstrap/Makefile.bootstrap"; echo .tardigrade-ci)
 
 $(REPO_DIR)/%:
 	@ echo "[make]: Creating directory '$@'..."
