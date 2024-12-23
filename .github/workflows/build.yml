@@ -91,10 +91,15 @@ jobs:
           mkdir -p ./${{ env.REPO_PATH }}/terraform-registry
           aws s3 sync --no-sign-request --exact-timestamps --endpoint-url ${{ env.MIRROR_ENDPOINT }} s3://${{ env.MIRROR_BUCKET }}/repo/terraform-registry/ ./${{ env.REPO_PATH }}/terraform-registry/
 
+      - name: Install terraform binary
+        run: |
+          make terraform/install
+
       - name: Create Terraform registry
         run: |
-          terraform -chdir=./providers/ providers mirror \
+          "${HOME}"/bin/terraform -chdir=./providers/ providers mirror \
             -platform=linux_amd64 \
+            -platform=linux_arm64 \
             -platform=windows_amd64 \
             -platform=darwin_amd64 \
             ../${{ env.REPO_PATH }}/terraform-registry/
@@ -109,7 +114,7 @@ jobs:
             }
           }
           EOF
-          terraform -chdir=./providers/ init
+          "${HOME}"/bin/terraform -chdir=./providers/ init
 
       - name: Push mirror to s3 bucket
         if: github.event_name != 'pull_request'
