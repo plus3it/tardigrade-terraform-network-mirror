@@ -22,7 +22,7 @@ jobs:
     steps:
       # Keep these sorted alphabetically by <user>/<repo>, separated by an empty line
 
-      - uses: gruntwork-io/terragrunt@v0.77.11
+      - uses: gruntwork-io/terragrunt@v0.77.12
 
       - uses: hashicorp/packer-plugin-amazon@v1.3.6
 
