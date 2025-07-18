@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source  = "registry.terraform.io/hashicorp/aws"
-      version = "6.3.0"
+      version = "6.4.0"
     }
     external = {
       source  = "registry.terraform.io/hashicorp/external"
