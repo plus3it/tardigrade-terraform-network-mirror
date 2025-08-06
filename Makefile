@@ -20,16 +20,15 @@ packer/download: | $(PACKER_VERSION_REPO_PATH) guard/program/jq
 	$(call download_hashicorp_release,$(PACKER_VERSION_REPO_PATH)/$(@D)_$(PACKER_VERSION)_$(OS)_$(ARCH).zip,$(@D),$(PACKER_VERSION))
 
 packer-plugin/download/%: PACKER_PLUGIN_NAME = packer-plugin-$*
-packer-plugin/download/%: PACKER_PLUGIN_VERSION = v$(call match_pattern_in_file,$(MIRROR_GITHUB_TOOLS),'hashicorp/$(PACKER_PLUGIN_NAME)','$(SEMVER_PATTERN)')
-packer-plugin/download/%: PACKER_PLUGIN_FILENAME = $(shell basename $(shell $(call parse_github_download_url,hashicorp,$(PACKER_PLUGIN_NAME),tags/$(PACKER_PLUGIN_VERSION),(.name | contains("$(OS)_$(ARCH)")))))
+packer-plugin/download/%: PACKER_PLUGIN_VERSION = $(call match_pattern_in_file,$(MIRROR_GITHUB_TOOLS),'hashicorp/$(PACKER_PLUGIN_NAME)','$(SEMVER_PATTERN)')
 packer-plugin/download/%: PACKER_PLUGIN_VERSION_REPO_PATH = $(REPO_DIR)/packer-plugins/$*/$(PACKER_PLUGIN_VERSION)
 packer-plugin/download/%:
 	@ $(SELF) $(PACKER_PLUGIN_VERSION_REPO_PATH)
 	@ echo "[$@]: Downloading $(PACKER_PLUGIN_NAME) $(PACKER_PLUGIN_VERSION)..."
-	$(call download_github_release,$(PACKER_PLUGIN_VERSION_REPO_PATH)/$(PACKER_PLUGIN_FILENAME),hashicorp,$(PACKER_PLUGIN_NAME),tags/$(PACKER_PLUGIN_VERSION),(.name | contains("$(OS)_$(ARCH)")))
+	$(call download_hashicorp_release,$(PACKER_PLUGIN_VERSION_REPO_PATH)/$(PACKER_PLUGIN_NAME)_$(PACKER_PLUGIN_VERSION)_$(OS)_$(ARCH).zip,$(PACKER_PLUGIN_NAME),$(PACKER_PLUGIN_VERSION))
 
 packer-plugins/download: | guard/program/jq
-packer-plugins/download: packer-plugin/download/amazon packer-plugin/download/azure packer-plugin/download/openstack packer-plugin/download/vagrant packer-plugin/download/virtualbox
+packer-plugins/download: packer-plugin/download/amazon packer-plugin/download/azure packer-plugin/download/vagrant packer-plugin/download/virtualbox
 
 terraform/download: | $(TERRAFORM_VERSION_REPO_PATH) guard/program/jq
 	@ echo "[$@]: Downloading $(@D) $(TERRAFORM_VERSION)..."
