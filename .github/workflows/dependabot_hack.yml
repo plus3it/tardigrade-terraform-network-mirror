@@ -28,7 +28,7 @@ jobs:
 
       - uses: hashicorp/packer-plugin-azure@v2.5.0
 
-      - uses: hashicorp/packer-plugin-openstack@v1.1.2
+      - uses: hashicorp/packer-plugin-openstack@v1.1.3
 
       - uses: hashicorp/packer-plugin-vagrant@v1.1.6
 
