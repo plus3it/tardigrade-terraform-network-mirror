@@ -14,7 +14,7 @@ terraform {
     }
     null = {
       source  = "registry.terraform.io/hashicorp/null"
-      version = "3.3.0"
+      version = "3.3.1"
     }
     random = {
       source  = "registry.terraform.io/hashicorp/random"
